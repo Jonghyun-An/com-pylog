@@ -26,6 +26,7 @@ Supports Mapped Diagnostic Context (MDC).
 Set MDC pairs are automatically added to log entries by the library.
 """
 from typing import TypeVar
+from collections.abc import Mapping
 from enum import IntEnum
 import sys
 import json
@@ -94,7 +95,7 @@ class Logger():
         """Output the log, currently to stdout."""
         print(log)
 
-    def log(self, level: Level, message: str):
+    def log(self, level: Level, message: str, *args):
         """Log a message.
 
         Logs the message with the given severity if it is equal or higher than
@@ -103,8 +104,14 @@ class Logger():
         Keyword arguments:
         level -- severity of the log message
         message -- log message
+        args -- optional percent-formatting arguments, evaluated only if logged
         """
         if level >= self.current_level:
+            if args:
+                if len(args) == 1 and isinstance(args[0], Mapping) and args[0]:
+                    message = message % args[0]
+                else:
+                    message = message % args
             log_entry = {}
             log_entry["ts"] = int(round(time.time() * 1000))
             log_entry["crit"] = LEVEL_STRINGS[level]
@@ -113,21 +120,21 @@ class Logger():
             log_entry["msg"] = message
             self._output_log(json.dumps(log_entry))
 
-    def error(self, message: str):
+    def error(self, message: str, *args):
         """Log an error message. Equals to log(ERROR, msg)."""
-        self.log(Level.ERROR, message)
+        self.log(Level.ERROR, message, *args)
 
-    def warning(self, message: str):
+    def warning(self, message: str, *args):
         """Log a warning message. Equals to log(WARNING, msg)."""
-        self.log(Level.WARNING, message)
+        self.log(Level.WARNING, message, *args)
 
-    def info(self, message: str):
+    def info(self, message: str, *args):
         """Log an info message. Equals to log(INFO, msg)."""
-        self.log(Level.INFO, message)
+        self.log(Level.INFO, message, *args)
 
-    def debug(self, message: str):
+    def debug(self, message: str, *args):
         """Log a debug message. Equals to log(DEBUG, msg)."""
-        self.log(Level.DEBUG, message)
+        self.log(Level.DEBUG, message, *args)
 
     def set_level(self, level: Level):
         """Set current logging level.

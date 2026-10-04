@@ -33,33 +33,33 @@ from .Logger import Value
 _root_logger = Logger()
 
 
-def log(level: Level, message: str):
+def log(level: Level, message: str, *args):
     """Log a message."""
-    _root_logger.log(level, message)
+    _root_logger.log(level, message, *args)
 
 
 def mdclog_format_init(configmap_monitor=False):
     _root_logger.mdclog_format_init(configmap_monitor)    
 
 
-def error(message: str):
+def error(message: str, *args):
     """Log an error message. Equals to log(ERROR, msg)."""
-    _root_logger.log(Level.ERROR, message)
+    _root_logger.log(Level.ERROR, message, *args)
 
 
-def warning(message: str):
+def warning(message: str, *args):
     """Log a warning message. Equals to log(WARNING, msg)."""
-    _root_logger.log(Level.WARNING, message)
+    _root_logger.log(Level.WARNING, message, *args)
 
 
-def info(message: str):
+def info(message: str, *args):
     """Log an info message. Equals to log(INFO, msg)."""
-    _root_logger.log(Level.INFO, message)
+    _root_logger.log(Level.INFO, message, *args)
 
 
-def debug(message: str):
+def debug(message: str, *args):
     """Log a debug message. Equals to log(DEBUG, msg)."""
-    _root_logger.log(Level.DEBUG, message)
+    _root_logger.log(Level.DEBUG, message, *args)
 
 
 def set_level(level: Level):
